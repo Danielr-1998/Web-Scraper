@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Scraping de Correos Electrónicos</title>
+    <!-- Estilos de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ3QFhXgU3b8F5gtXx24lOA5xot9F2Kl1xVrWdhfbt1Q0RVHPO+dKHc49M0i" crossorigin="anonymous">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Web Scraper</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h1 class="text-center mb-4">Obtener Correos Electrónicos</h1>
+                <form id="scrapeForm">
+                    <div class="form-group">
+                        <label for="urlInput">Ingresa la URL:</label>
+                        <input type="url" class="form-control" id="urlInput" placeholder="https://www.ejemplo.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Obtener Correos</button>
+                </form>
+
+                <!-- Resultado del scraping -->
+                <div class="mt-4" id="resultSection" style="display: none;">
+                    <h3>Correos Electrónicos Encontrados:</h3>
+                    <pre id="jsonResult"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de jQuery y Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybQbPxL1fNes5npzWyl6Aa7CkVnFf5zQv3JmjwCz9zIz3r9oV1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0pXvXw5BpNdc0v/PeF7wGv9p4qptJQTeGsNkA+" crossorigin="anonymous"></script>
+    
+    <!-- Script personalizado -->
+    <script>
+        $(document).ready(function() {
+            $('#scrapeForm').submit(function(e) {
+                e.preventDefault();
+
+                const url = $('#urlInput').val();
+                if (url) {
+                    $.ajax({
+                        url: `http://localhost:8000/scrape1/`,  // Endpoint de FastAPI
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ url: url }),
+                        success: function(response) {
+                            $('#resultSection').show();
+                            $('#jsonResult').text(JSON.stringify(response, null, 2));  // Formato bonito JSON
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Hubo un error al obtener los correos electrónicos.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
