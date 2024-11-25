@@ -1,7 +1,7 @@
 # app/routes/scrape.py
 
 from fastapi import APIRouter, HTTPException
-from app.services.scraper import scrape_emails_from_url
+from app.services.scraper import scrape_emails_from_url,crawl_website
 
 router = APIRouter()
 
@@ -17,3 +17,9 @@ async def get_emails(url: str):
         return {"emails": emails}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/scrape1")
+async def scrape(start_url: str):
+    emails = crawl_website(start_url)
+    return {"emails": list(emails)}
